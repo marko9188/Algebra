@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form'
-import { connect } from 'react-redux';
-import { DELETE_TODO,TOGGLE_TODO } from '../store/redux-store';
-
+import  { connect } from 'react-redux';
+import { DELETE_TODO, TOGGLE_TODO } from '../store/redux-store'; 
 
 class TodoItem extends React.Component {
 
@@ -37,12 +36,12 @@ class TodoItem extends React.Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    removeTodo: (id) => dispatch ({type: DELETE_TODO,payload: id}),
-    toggleTodo: (id)=>dispatch({type: TOGGLE_TODO,payload:id})
-  }
+    removeTodo: (id) => dispatch({type: DELETE_TODO, payload: id}),
+    toggleTodo: (id) => dispatch({type: TOGGLE_TODO, payload: id}),
+  };
 }
 
-export default connect (null,mapDispatchToProps)(TodoItem);
+export default connect(null, mapDispatchToProps)(TodoItem);
 
 TodoItem.propTypes = {
   removeTodo: PropTypes.func,

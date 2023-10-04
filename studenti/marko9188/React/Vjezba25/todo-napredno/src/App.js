@@ -11,23 +11,29 @@ import './App.css';
 class App extends React.Component {
 
   state = {
-    todos: JSON.parse(localStorage.getItem('todos')) || [],
     visibility: VISIBILITY_TYPES.ALL, 
   }
 
-  componentDidUpdate() {
-    localStorage.setItem('todos', JSON.stringify(this.state.todos));
+  componentDidMount() {
+    const pathname  = window.location.href;
+    const path = pathname.split('/').join(' ');
+
+    if(path.includes(VISIBILITY_TYPES.ACTIVE)){
+      this.setState({visibility: VISIBILITY_TYPES.ACTIVE});
+    }
+    if(path.includes(VISIBILITY_TYPES.COMPLETED)){
+      this.setState({visibility: VISIBILITY_TYPES.COMPLETED});
+    }
   }
 
-  // handleAddTodo(value){
-  //   const { todos } = this.state;
-  //   const newTodo = { id: Math.random().toString(36).substr(2, 9), text: value, completed: false };
-  //   this.setState({ todos: [...todos, newTodo]});
-  // }
+  componentDidUpdate() {
+    const { todos } = this.props;
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }
 
   getVisibleTodos() {
     const { visibility } = this.state;
-    const {todos} = this.props;
+    const { todos } = this.props;
     if (visibility === VISIBILITY_TYPES.ALL){
       return todos;
     }
@@ -43,33 +49,15 @@ class App extends React.Component {
     this.setState({visibility: visibility});
   }
 
-  // handleToggleTodo(id){
-  //   const { todos } = this.state;
-  //   const todo = todos.find(item => item.id === id);
-  //   todo.completed = !todo.completed;
-  //   this.setState({todos});
-  // }
-
-  // handleRemoveTodo(id) {
-  //   const { todos } = this.state;
-  //   const newTodos = todos.filter(todo => todo.id !== id);
-  //   this.setState({ todos: newTodos});
-  // }
-
-  componentDidUpdate() {
-    const { todos } = this.props;
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }
-
   handleRemoveCompleted = () => {
-    const { todos } = this.state;
-    const newTodos = todos.filter(todo => !todo.completed);
-    this.setState({ todos: newTodos});
+    const { removeTodo } = this.props;
+    removeTodo();
   }
 
   render() {
 
-    const { todos, visibility } = this.state;
+    const { visibility } = this.state;
+    const { todos } = this.props;
     const visibleTodos = this.getVisibleTodos();
     const hasCompleted = todos.filter(todo => !!todo.completed).length > 0;
 
@@ -79,31 +67,29 @@ class App extends React.Component {
           <VisibilityToolbar visibilityType={visibility} onVisibilityChange={this.handleVisibilityChange.bind(this)}/>
           <div className='todo-container'>
             <AddTodoForm />
-            <TodoList todos={visibleTodos} toggleTodo={this.handleToggleTodo.bind(this)} removeTodo={this.handleRemoveTodo.bind(this)}/>
+            <TodoList todos={visibleTodos}/>
           </div>
           {hasCompleted && visibleTodos && <span className='btn-clear-all' onClick={this.handleRemoveCompleted}>Clear Completed</span>}
       </div>
     );
   }
-
-  
-
 }
 
-function mapStateToProps (state) {
-  return{
+function mapStateToProps(state) {
+  return {
     todos: state.todos
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    removeTodo: ()=>dispatch({type: REMOVE_ALL_COMPLETED})
-  }
+    removeTodo: () => dispatch({type: REMOVE_ALL_COMPLETED}),
+  };
 }
 
-export default connect (mapStateToProps,mapDispatchToProps) (App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 App.propTypes = {
-  todos: PropTypes.array
-}
+  todos: PropTypes.array,
+  removeTodo: PropTypes.func
+};
