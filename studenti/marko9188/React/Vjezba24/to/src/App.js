@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { VisibilityToolbar, AddTodoForm, TodoList } from './components/index';
-import { VISIBILITY_TYPES } from "./constants/const";
+import { VISIBILITY_TYPES } from './constants/const';
 
 import './App.css';
 
