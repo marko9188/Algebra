@@ -13,11 +13,12 @@
 
 
 function Dog(ime) {
-	this.name = ime || "Rex";
+	this.name = name || "Rex";
    	this.bark = function() {
 		return 'Wuf Wuf';
 	}
 }
+
 
 var astor = new Dog('test');
 

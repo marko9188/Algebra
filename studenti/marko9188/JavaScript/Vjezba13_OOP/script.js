@@ -34,3 +34,4 @@ var character = {
   
   console.log(proto1);
   console.log(character.vratiCitat());
+  console.log(character.name);
